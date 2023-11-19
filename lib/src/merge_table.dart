@@ -24,7 +24,9 @@ class MergeTable extends StatelessWidget {
   final double? rowHeight;
   late final Map<int, TableColumnWidth> columnWidths;
 
-  TableCellVerticalAlignment get defaultVerticalAlignment => alignment.tableAlignment;
+  TableCellVerticalAlignment get defaultVerticalAlignment =>
+      alignment.tableAlignment;
+
   AlignmentGeometry get alignmentGeometry => alignment.geometry;
 
   @override
@@ -49,7 +51,13 @@ class MergeTable extends StatelessWidget {
           if (column.columns != null) {
             return buildMergedColumn(column);
           } else {
-            return buildSingleColumn(column.header);
+            return Container(
+              height: (rowHeight ?? 0 + 32),
+              child: buildSingleColumn(
+                title: column.header,
+                color: column.color,
+              ),
+            );
           }
         },
       ),
@@ -70,7 +78,7 @@ class MergeTable extends StatelessWidget {
               if (isMergedColumn) {
                 return buildMutiColumns(item.inlineRow);
               } else {
-                return buildAlign(item.inlineRow.first);
+                return buildAlign(child: item.inlineRow.first);
               }
             },
           ),
@@ -82,11 +90,14 @@ class MergeTable extends StatelessWidget {
   Widget buildMergedColumn(BaseMColumn column) {
     return Column(
       children: [
-        buildSingleColumn(column.header),
+        buildSingleColumn(title: column.header, color: column.color),
         Divider(color: borderColor, height: 1, thickness: 1),
         buildMutiColumns(
           List.generate(column.columns!.length, (index) {
-            return buildSingleColumn(column.columns![index]);
+            return buildSingleColumn(
+              title: column.columns![index],
+              color: column.color,
+            );
           }),
         ),
       ],
@@ -94,13 +105,13 @@ class MergeTable extends StatelessWidget {
   }
 
   Widget buildMutiColumns(List<Widget> values) {
-    return LayoutBuilder(builder: (context, constriant) {
+    return LayoutBuilder(builder: (context, constraint) {
       List<Widget> children = List.generate(values.length, (index) {
         Widget value = values[index];
         double spaceForBorder = (values.length - 1) / values.length;
         return SizedBox(
-          width: constriant.maxWidth / values.length - spaceForBorder,
-          child: buildAlign(value),
+          width: constraint.maxWidth / values.length - spaceForBorder,
+          child: buildAlign(child: value),
         );
       });
       return Container(
@@ -121,12 +132,13 @@ class MergeTable extends StatelessWidget {
     });
   }
 
-  Widget buildSingleColumn(String title) {
-    return buildAlign(Text(title));
+  Widget buildSingleColumn({required String title, Color? color}) {
+    return buildAlign(child: Text(title), color: color);
   }
 
-  Widget buildAlign(Widget child) {
+  Widget buildAlign({required Widget child, Color? color}) {
     return Container(
+      color: color,
       alignment: alignmentGeometry,
       child: child,
     );
@@ -138,7 +150,8 @@ class MergeTable extends StatelessWidget {
     for (int i = 0; i < columns.length; i++) {
       BaseMColumn column = columns[i];
       if (column.isMergedColumn) {
-        columnWidths[i] = FlexColumnWidth(flexPerColumn * column.columns!.length);
+        columnWidths[i] =
+            FlexColumnWidth(flexPerColumn * column.columns!.length);
       } else {
         columnWidths[i] = FlexColumnWidth(flexPerColumn);
       }

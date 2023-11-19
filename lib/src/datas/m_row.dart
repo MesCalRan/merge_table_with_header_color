@@ -2,6 +2,7 @@ part of merge_table;
 
 abstract class BaseMRow {
   final List<Widget> inlineRow;
+
   BaseMRow(this.inlineRow);
 }
 

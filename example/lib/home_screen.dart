@@ -7,7 +7,17 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildMergeTable(),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: buildMergeTable(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -15,16 +25,16 @@ class HomeScreen extends StatelessWidget {
     return MergeTable(
       borderColor: Colors.black,
       alignment: MergeTableAlignment.center,
-      rowHeight: 80,
       columns: [
-        MColumn(header: "Pump"),
-        MColumn(header: "Product"),
-        MColumn(header: "Seal"),
+        MColumn(header: "RED", color: Colors.red),
+        MColumn(header: "GREEN", color: Colors.green),
+        MColumn(header: "BLUE", color: Colors.blue),
         MMergedColumns(
-          header: "Reading",
+          header: "3 Words",
+          color: Colors.orange,
           columns: ["Before", "Then", "After"],
         ),
-        MColumn(header: "Write"),
+        MColumn(header: "Yellow", color: Colors.yellow),
       ],
       rows: [
         [
