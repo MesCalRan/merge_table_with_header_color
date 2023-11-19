@@ -52,7 +52,7 @@ class MergeTable extends StatelessWidget {
             return buildMergedColumn(column);
           } else {
             return Container(
-              height: rowHeight,
+              height: rowHeight != null ? rowHeight! * 1.8 : null,
               child: buildSingleColumn(
                 title: column.header,
                 color: column.color,

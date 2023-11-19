@@ -25,6 +25,7 @@ class HomeScreen extends StatelessWidget {
     return MergeTable(
       borderColor: Colors.black,
       alignment: MergeTableAlignment.center,
+      rowHeight: 24,
       columns: [
         MColumn(header: "RED", color: Colors.red),
         MColumn(header: "GREEN", color: Colors.green),
