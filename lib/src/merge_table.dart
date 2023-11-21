@@ -7,6 +7,7 @@ class MergeTable extends StatelessWidget {
     required this.columns,
     required this.borderColor,
     this.rowHeight,
+    this.headerHeight,
     this.alignment = MergeTableAlignment.center,
   }) : super(key: key) {
     columnWidths = fetchColumnWidths(columns);
@@ -22,6 +23,7 @@ class MergeTable extends StatelessWidget {
   final List<List<BaseMRow>> rows;
   final MergeTableAlignment alignment;
   final double? rowHeight;
+  final double? headerHeight;
   late final Map<int, TableColumnWidth> columnWidths;
 
   TableCellVerticalAlignment get defaultVerticalAlignment =>
@@ -49,10 +51,10 @@ class MergeTable extends StatelessWidget {
         (index) {
           BaseMColumn column = columns[index];
           if (column.columns != null) {
-            return buildMergedColumn(column);
+            return buildMergedColumn(column: column, height: headerHeight);
           } else {
             return Container(
-              height: rowHeight != null ? rowHeight! * 1.9 : null,
+              height: headerHeight != null ? headerHeight! * 2 : null,
               child: buildSingleColumn(
                 title: column.header,
                 color: column.color,
@@ -87,18 +89,24 @@ class MergeTable extends StatelessWidget {
     );
   }
 
-  Widget buildMergedColumn(BaseMColumn column) {
+  Widget buildMergedColumn({required BaseMColumn column, double? height}) {
     return Column(
       children: [
-        buildSingleColumn(title: column.header, color: column.color),
+        Container(
+          height: headerHeight,
+          child: buildSingleColumn(title: column.header, color: column.color),
+        ),
         Divider(color: borderColor, height: 1, thickness: 1),
-        buildMutiColumns(
-          List.generate(column.columns!.length, (index) {
-            return buildSingleColumn(
-              title: column.columns![index],
-              color: column.color,
-            );
-          }),
+        Container(
+          height: headerHeight,
+          child: buildMutiColumns(
+            List.generate(column.columns!.length, (index) {
+              return buildSingleColumn(
+                title: column.columns![index],
+                color: column.color,
+              );
+            }),
+          ),
         ),
       ],
     );
@@ -132,7 +140,11 @@ class MergeTable extends StatelessWidget {
     });
   }
 
-  Widget buildSingleColumn({required String title, Color? color}) {
+  Widget buildSingleColumn({
+    required String title,
+    Color? color,
+    double? height,
+  }) {
     return buildAlign(child: Text(title), color: color);
   }
 

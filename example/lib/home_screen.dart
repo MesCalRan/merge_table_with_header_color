@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
     return MergeTable(
       borderColor: Colors.black,
       alignment: MergeTableAlignment.center,
-      rowHeight: 24,
+      headerHeight: 24,
       columns: [
         MColumn(header: "RED", color: Colors.red),
         MColumn(header: "GREEN", color: Colors.green),
@@ -43,9 +43,33 @@ class HomeScreen extends StatelessWidget {
           MRow(const Text("2")),
           MRow(const Text("3")),
           MMergedRows([
-            const Text("4"),
-            const Text("5"),
-            const Text("8"),
+            Column(
+              children: const [
+                Text("4"),
+                SizedBox(height: 4),
+                Text("4"),
+                SizedBox(height: 4),
+                Text("4"),
+              ],
+            ),
+            Column(
+              children: const [
+                Text("5"),
+                SizedBox(height: 4),
+                Text("5"),
+                SizedBox(height: 4),
+                Text("5"),
+              ],
+            ),
+            Column(
+              children: const [
+                Text("8"),
+                SizedBox(height: 4),
+                Text("8"),
+                SizedBox(height: 4),
+                Text("8"),
+              ],
+            ),
           ]),
           MRow(const Text("6")),
         ],
