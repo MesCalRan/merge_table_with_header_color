@@ -8,6 +8,7 @@ class MergeTable extends StatelessWidget {
     required this.borderColor,
     this.rowHeight,
     this.headerHeight,
+    this.headerTextStyle,
     this.alignment = MergeTableAlignment.center,
   }) : super(key: key) {
     columnWidths = fetchColumnWidths(columns);
@@ -24,6 +25,7 @@ class MergeTable extends StatelessWidget {
   final MergeTableAlignment alignment;
   final double? rowHeight;
   final double? headerHeight;
+  final TextStyle? headerTextStyle;
   late final Map<int, TableColumnWidth> columnWidths;
 
   TableCellVerticalAlignment get defaultVerticalAlignment =>
@@ -51,13 +53,18 @@ class MergeTable extends StatelessWidget {
         (index) {
           BaseMColumn column = columns[index];
           if (column.columns != null) {
-            return buildMergedColumn(column: column, height: headerHeight);
+            return buildMergedColumn(
+              column: column,
+              height: headerHeight,
+              textStyle: headerTextStyle,
+            );
           } else {
             return Container(
               height: headerHeight != null ? headerHeight! * 2 : null,
               child: buildSingleColumn(
                 title: column.header,
                 color: column.color,
+                textStyle: headerTextStyle,
               ),
             );
           }
@@ -78,7 +85,9 @@ class MergeTable extends StatelessWidget {
               BaseMRow item = values[index];
               bool isMergedColumn = item.inlineRow.length > 1;
               if (isMergedColumn) {
-                return buildMutiColumns(item.inlineRow);
+                return buildMutiColumns(
+                  item.inlineRow,
+                );
               } else {
                 return buildAlign(child: item.inlineRow.first);
               }
@@ -89,12 +98,20 @@ class MergeTable extends StatelessWidget {
     );
   }
 
-  Widget buildMergedColumn({required BaseMColumn column, double? height}) {
+  Widget buildMergedColumn({
+    required BaseMColumn column,
+    double? height,
+    TextStyle? textStyle,
+  }) {
     return Column(
       children: [
         Container(
           height: headerHeight,
-          child: buildSingleColumn(title: column.header, color: column.color),
+          child: buildSingleColumn(
+            title: column.header,
+            color: column.color,
+            textStyle: textStyle,
+          ),
         ),
         Divider(color: borderColor, height: 1, thickness: 1),
         Container(
@@ -104,6 +121,7 @@ class MergeTable extends StatelessWidget {
               return buildSingleColumn(
                 title: column.columns![index],
                 color: column.color,
+                textStyle: textStyle,
               );
             }),
           ),
@@ -144,8 +162,14 @@ class MergeTable extends StatelessWidget {
     required String title,
     Color? color,
     double? height,
+    TextStyle? textStyle,
   }) {
-    return buildAlign(child: Text(title), color: color);
+    return buildAlign(
+        child: Text(
+          title,
+          style: textStyle,
+        ),
+        color: color);
   }
 
   Widget buildAlign({required Widget child, Color? color}) {
